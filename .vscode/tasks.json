@@ -1,0 +1,162 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Restore Project",
+            "type": "shell",
+            "command": "msbuild /t:restore",
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+
+        {
+            "label": "Clean Project",
+            "type": "shell",
+            "command": "msbuild Yrsa /t:clean /p:configuration=Debug && msbuild Yrsa /t:clean /p:configuration=Release",
+            "group": "build",
+            "problemMatcher": "$msCompile",
+        },
+
+        {
+            "label": "Build (Debug)",
+            "type": "shell",
+            "command": "msbuild",
+            "args": [
+                "Yrsa.sln",
+                "/p:configuration=Debug",
+                "/p:platform=Any CPU",
+                "/t:build"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile",
+			"dependsOn": "Build Content",
+        },
+
+        {
+            "label": "Build (Release)",
+            "type": "shell",
+            "command": "msbuild",
+            "args": [
+                "Yrsa.sln",
+                "/p:configuration=Release",
+                "/p:platform=Any CPU",
+                "/t:build"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile",
+        },
+
+        {
+            "label": "Build and Run (Debug)",
+            "type": "shell",
+            "group": "build",
+            "osx":{
+                "command": "DYLD_LIBRARY_PATH=${workspaceFolder}/Yrsa/bin/Debug/osx/ mono ${workspaceFolder}/Yrsa/bin/Debug/Yrsa.exe"
+            },
+            "windows":{
+                "command": "start",
+                "args": [
+                    "${workspaceFolder}/Yrsa/bin/Debug/Yrsa.exe"
+                ]
+            },
+            "dependsOn": "Build (Debug)",
+            "problemMatcher": "$msCompile"
+        },
+
+        {
+            "label": "Build and Run (Release)",
+            "type": "shell",
+            "group": "build",
+            "osx":{
+                "command": "DYLD_LIBRARY_PATH=${workspaceFolder}/Yrsa/bin/Release/osx/ mono ${workspaceFolder}/Yrsa/bin/Release/Yrsa.exe"
+            },
+            "windows":{
+                "command": "start",
+                "args": [
+                    "${workspaceFolder}/Yrsa/bin/Release/Yrsa.exe"
+                ]
+            },
+            "dependsOn": "Build (Release)",
+            "problemMatcher": "$msCompile"
+        },
+
+        {
+            "label": "Build Effects",
+            "type": "shell",
+            "group": "build",
+            "osx":{
+                "command": "${workspaceFolder}/.vscode/buildEffects.sh"
+            },
+            "windows":{
+                "command": "powershell",
+                "args": [
+                    "-File",
+                    "${workspaceFolder}/.vscode/buildEffects.ps1"
+                ],
+            },
+            "problemMatcher": "$msCompile"
+        },
+
+        {
+            "label": "Build Content",
+            "type": "shell",
+            "group": "build",
+            "command": "msbuild /t:BuildContent",
+            "options": {
+                "cwd": "${workspaceFolder}/Yrsa"
+            },
+            "problemMatcher": "$msCompile"
+        },
+
+        {
+            "label": "Force Build Content",
+            "type": "shell",
+            "group": "build",
+            "osx": {
+                "command": "mono /Applications/Pipeline.app/Contents/MonoBundle/MGCB.exe /@:Content.mgcb -r",
+            },
+            "windows": {
+                "command":"C:/Program Files (x86)/MSBuild/MonoGame/v3.0/Tools/MGCB.exe",
+                "args": [
+                    "/@:Content.mgcb",
+                    "-r"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/Yrsa/CompiledContent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+
+        {
+            "label": "Open Pipeline Tool",
+            "type": "shell",
+            "group": "build",
+            "osx": {
+                "command": "export MONOGAME_PIPELINE_PROJECT=${workspaceFolder}/Yrsa/CompiledContent/Content.mgcb && /Applications/Pipeline.app/Contents/MacOS/Pipeline"
+            },
+            "windows": {
+                "command": "${workspaceFolder}/Yrsa/CompiledContent/Content.mgcb"
+            },
+            "problemMatcher": "$msCompile"
+        },
+
+        {
+            "label": "Process T4 Templates",
+            "type": "shell",
+            "osx": {
+                "command": "${workspaceFolder}/.vscode/processT4Templates.sh"
+            },
+            "windows": {
+                "command": "powershell",
+                "args": [
+                    "-File",
+                    "${workspaceFolder}/.vscode/processT4Templates.ps1"
+                ]
+            },
+            "group": "build",
+            "problemMatcher": "$msCompile",
+        },
+    ]
+}
+

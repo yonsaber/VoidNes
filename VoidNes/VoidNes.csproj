@@ -1,0 +1,100 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<!-- Updated to work on Linux / OSX. With help from: https://github.com/kellygravelyn/FNADotNetCoreExample -->
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<AssemblyName>project_name.Desktop</AssemblyName>
+		<MonoGamePlatform>DesktopGL</MonoGamePlatform>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<RuntimeIdentifiers>win-x64;win-x86;osx-x64;linux-x64</RuntimeIdentifiers>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommandLineParser" Version="2.8.0" />
+		<PackageReference Include="ImGui.NET" Version="1.86.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+		<PackageReference Include="System.ComponentModel.Composition" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\FNA\FNA.Core.csproj" />
+	</ItemGroup>
+
+	 <Import Project="MonoGameContent.targets" />
+
+	<!--
+		When publishing RuntimeIdentifier will tell us the platform we're building
+		so we use that to determine which platform to build for.
+		When that value isn't set it means we're doing a regular build so we just
+		use the OS doing the build to figure out what to build for.
+	-->
+	<PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+		<IsLinux Condition="$(RuntimeIdentifier.Contains('linux'))">true</IsLinux>
+		<IsMacOS Condition="$(RuntimeIdentifier.Contains('osx'))">true</IsMacOS>
+		<IsWindows Condition="$(RuntimeIdentifier.Contains('win'))">true</IsWindows>
+		<Is64Bit Condition="$(RuntimeIdentifier.Contains('x64'))">true</Is64Bit>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(RuntimeIdentifier)' == ''">
+		<IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+		<IsMacOS Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsMacOS>
+		<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+		<Is64Bit Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">true</Is64Bit>
+	</PropertyGroup>
+
+    <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))'">
+  		<DefineConstants>WINDOWS</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">
+		<DefineConstants>OSX</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::LINUX)))'">
+		<DefineConstants>LINUX</DefineConstants>
+	</PropertyGroup>
+
+	<!-- Determine the correct folder for our fnalibs -->
+	<PropertyGroup>
+		<FNALibs Condition="'$(IsLinux)' == 'true' and '$(Is64Bit)' == 'false'">lib</FNALibs>
+		<FNALibs Condition="'$(IsLinux)' == 'true' and '$(Is64Bit)' == 'true'">lib64</FNALibs>
+		<FNALibs Condition="'$(IsMacOS)' == 'true'">osx</FNALibs>
+		<FNALibs Condition="'$(IsWindows)' == 'true' and '$(Is64Bit)' == 'true'">x64</FNALibs>
+		<FNALibs Condition="'$(IsWindows)' == 'true' and '$(Is64Bit)' == 'false'">x86</FNALibs>
+	</PropertyGroup>
+
+	<!-- Copy over the correct fnalibs -->
+	<ItemGroup>
+		<None Include="$(MSBuildThisFileDirectory)/fnalibs/$(FNALibs)/*.*">
+		<Link>%(Filename)%(Extension)</Link>
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		<Visible>False</Visible>
+		</None>
+	</ItemGroup>
+
+	<!--
+		On Windows and Linux we can simply copy the Content directory over to the
+		publish directory. For macOS the bundle target below will handle copying
+		since we need to put the content into the Resources folder in the app
+		bundle.
+	-->
+	<ItemGroup>
+		<None Condition="'$(IsLinux)' == 'true' or '$(IsWindows)' == 'true'" Include="$(MSBuildThisFileDirectory)/../Content/*.*">
+		<Link>content/%(Filename)%(Extension)</Link>
+		<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		<Visible>False</Visible>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>
