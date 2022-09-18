@@ -10,7 +10,7 @@ internal class Program
             return;
         }
 
-        using var game = new Emulator(args[0]);
+        using var game = new EmulatorGame(args[0]);
         game.Run();
     }
 }

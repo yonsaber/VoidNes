@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using VoidNes.Emulator;
 
 namespace VoidNes
 {
-    internal class Emulator : Game
+    internal class EmulatorGame : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -12,7 +13,7 @@ namespace VoidNes
 
         private Cartridge _cartridge;
 
-        public Emulator(string romPath)
+        public EmulatorGame(string romPath)
         {
             _romPath = romPath;
 

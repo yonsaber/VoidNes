@@ -1,4 +1,4 @@
-﻿namespace VoidNes;
+﻿namespace VoidNes.Emulator;
 
 /// <summary>
 /// Representation of a NES Cartridge based on the NES 2.0 ROM format
@@ -8,10 +8,10 @@
 /// </remarks>
 public class Cartridge
 {
-	/// <summary>
-	/// Program ROM
-	/// </summary>
-	byte[] _prgRom;
+    /// <summary>
+    /// Program ROM
+    /// </summary>
+    byte[] _prgRom;
 
     /// <summary>
     /// Character ROM
@@ -65,17 +65,18 @@ public class Cartridge
     int _flags7;
 
     public Cartridge(string romFile)
-	{
-		ParseRom(romFile);
-	}
+    {
+        ParseRom(romFile);
+    }
 
-	private void ParseRom(string romFile)
-	{
+    private void ParseRom(string romFile)
+    {
         var stream = new FileStream(romFile, FileMode.Open, FileAccess.Read);
         var reader = new BinaryReader(stream);
 
         var header = reader.ReadChars(4);
 
+        // TODO: Get a nice helper function for this
         // 0x4E45531A
         if (header[0] != 'N' && header[1] != 'E' && header[2] != 'S' && header[3] != 0x1A)
             throw new Exception("Not a valid NES ROM!");
@@ -141,7 +142,9 @@ public class Cartridge
         _flags7 = reader.ReadByte();
 
         // Mapper Number
-        MapperNumber = _flags7 & 0xF0 | (_flags6 >> 4 & 0xF);
+        // We offset by 4 on flags 6 because we only care about the mapper info
+        // We use 0xF0 to get us the data we need (the mapper data)
+        MapperNumber = _flags7 & 0xF0 | _flags6 >> 4 & 0xF;
     }
 }
 
