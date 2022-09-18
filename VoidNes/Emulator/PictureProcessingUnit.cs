@@ -8,12 +8,12 @@
 /// </remarks>
 public class PictureProcessingUnit
 {
-    public byte ReadAddress(short address)
+    public byte ReadAddress(ushort address)
     {
         return 0;
     }
 
-    public void WriteAddress(short address, byte value)
+    public void WriteAddress(ushort address, byte value)
     {
 
     }

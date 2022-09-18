@@ -11,7 +11,7 @@ namespace VoidNes
 
         private string _romPath;
 
-        private Cartridge _cartridge;
+        private NesSystem _system;
 
         public EmulatorGame(string romPath)
         {
@@ -35,7 +35,15 @@ namespace VoidNes
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _cartridge = new Cartridge(_romPath);
+            try
+            {
+                _system = new NesSystem(_romPath);
+            }
+            catch (Exception)
+            {
+                // TODO: Something better than this
+                throw;
+            }
 
             base.LoadContent();
         }
