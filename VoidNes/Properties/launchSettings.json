@@ -2,7 +2,7 @@
   "profiles": {
     "VoidNes": {
       "commandName": "Project",
-      "commandLineArgs": "F:/code/_roms_/nestest.nes"
+      "commandLineArgs": "C:/code/_roms_/nestest.nes"
     }
   }
 }

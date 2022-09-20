@@ -26,11 +26,11 @@ public class NesSystem
     {
         try
         {
-            _cartridge = new Cartridge(romPath);
-            _cpu = new Cpu(this);
-
             // Address range 0x000 to 0x07FF
             _scratchRam = new byte[0x800];
+
+            _cartridge = new Cartridge(romPath);
+            _cpu = new Cpu(this);
 
             _pictureProcessingUnit = new PictureProcessingUnit();
             _audioProcessingUnit = new AudioProcessingUnit();

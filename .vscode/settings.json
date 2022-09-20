@@ -18,7 +18,7 @@
         ".gitmodules": true,
         "README.md": true,
         "fnalibs": true,
-        "Yrsa/CompiledContent/.mgstats": true,
+        "VoidNes/CompiledContent/.mgstats": true,
         "**/*.csproj*": true,
         "**/*.sln": true,
         "FNA/[^src]*": true, // hide everything but the src folder

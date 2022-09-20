@@ -7,7 +7,7 @@
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<PlatformTarget>AnyCPU</PlatformTarget>
-		<AssemblyName>project_name.Desktop</AssemblyName>
+		<AssemblyName>VoidNes.Desktop</AssemblyName>
 		<MonoGamePlatform>DesktopGL</MonoGamePlatform>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>

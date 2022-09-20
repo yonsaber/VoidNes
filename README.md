@@ -6,12 +6,12 @@ Inspiration / Tutortial being followed is: [JaktNesMonster](https://www.youtube.
 
 [NES information](https://www.nesdev.org/wiki)
 
+## Setup
+
+`git clone https://gitub.com/yonsaber/voidnes --recursive`
+
+Download [fnalibs](http://fna.flibitijibibo.com/archive/fnalibs.tar.bz2) extract and put the folder into the `VoidNes` project sub-folder 
+
 ## Running
 
-### Windows
-
-Use Visual Studio / Rider to run this project as normal
-
-### Linux
-
-`dotnet run --project VoidNes`
+`dotnet run --project VoidNes/VoidNes.csproj`
